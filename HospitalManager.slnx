@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/IdentityService/">
+    <Project Path="IdentityService/IdentityService.Api/IdentityService.Api.csproj" />
+    <Project Path="IdentityService/IdentityService.Application/IdentityService.Application.csproj" />
+    <Project Path="IdentityService/IdentityService.Domain/IdentityService.Domain.csproj" />
+    <Project Path="IdentityService/IdentityService.Infrastructure/IdentityService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/PatientService/">
+    <Project Path="PatientService/PatientService.Api/PatientService.Api.csproj" />
+    <Project Path="PatientService/PatientService.Application/PatientService.Application.csproj" />
+    <Project Path="PatientService/PatientService.Domain/PatientService.Domain.csproj" />
+    <Project Path="PatientService/PatientService.Infrastructure/PatientService.Infrastructure.csproj" />
+  </Folder>
+</Solution>
