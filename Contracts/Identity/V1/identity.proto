@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option csharp_namespace = "HospitalManager.Contracts.Identity.V1";
+
+package hospitalmanager.identity.v1;
+
+service IdentityInternal {
+  rpc Login (LoginRequest) returns (LoginReply);
+  rpc GetEmployee (GetEmployeeRequest) returns (EmployeeReply);
+  rpc CreateEmployee (CreateEmployeeRequest) returns (EmployeeReply);
+  rpc AssignRole (AssignRoleRequest) returns (EmployeeReply);
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  string access_token = 1;
+  int64 expires_at_unix_seconds = 2;
+}
+
+message GetEmployeeRequest {
+  string user_id = 1;
+}
+
+message CreateEmployeeRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  string password = 4;
+  repeated string roles = 5;
+}
+
+message AssignRoleRequest {
+  string user_id = 1;
+  string role = 2;
+}
+
+message EmployeeReply {
+  string user_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  repeated string roles = 5;
+  int64 created_at_unix_seconds = 6;
+}
