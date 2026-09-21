@@ -8,9 +8,9 @@ using System.Text;
 
 namespace PatientService.Infrastructure.Authentication
 {
-    public sealed class GrpcIdentityLoginClient(
+    public sealed class GrpcIdentityLoginClient( 
         IdentityInternal.IdentityInternalClient client,
-    IConfiguration configuration) : IIdentityLoginClient)
+    IConfiguration configuration) : IIdentityLoginClient
     {
         public async Task<LoginResult?> LoginAsync(
         string email,

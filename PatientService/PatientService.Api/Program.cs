@@ -84,13 +84,12 @@ builder.Services
     });
 
 builder.Services.AddSingleton<RSA>(_ => rsa);
-builder.Services.AddAuthorization();
-
-builder.Services.AddDbContext<PatientDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("PatientDb")
-        ?? throw new InvalidOperationException(
-            "PatientDb connection string is missing.")));
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireRole("Admin"));
+});
 
 var identityGrpcAddress =
     builder.Configuration["IdentityGrpc:Address"]
