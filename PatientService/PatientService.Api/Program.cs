@@ -1,8 +1,11 @@
+using HospitalManager.Contracts.Identity.V1;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using PatientService.Application.Authentication;
 using PatientService.Infrastructure;
+using PatientService.Infrastructure.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 
@@ -82,6 +85,25 @@ builder.Services
 
 builder.Services.AddSingleton<RSA>(_ => rsa);
 builder.Services.AddAuthorization();
+
+builder.Services.AddDbContext<PatientDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("PatientDb")
+        ?? throw new InvalidOperationException(
+            "PatientDb connection string is missing.")));
+
+var identityGrpcAddress =
+    builder.Configuration["IdentityGrpc:Address"]
+    ?? throw new InvalidOperationException(
+        "Missing configuration: IdentityGrpc:Address");
+
+builder.Services
+    .AddGrpcClient<IdentityInternal.IdentityInternalClient>(
+        options => options.Address = new Uri(identityGrpcAddress));
+
+builder.Services.AddScoped<
+    IIdentityLoginClient,
+    GrpcIdentityLoginClient>();
 
 var app = builder.Build();
 

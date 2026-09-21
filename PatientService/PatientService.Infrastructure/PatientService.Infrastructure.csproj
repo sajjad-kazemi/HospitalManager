@@ -24,10 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf
-      Include="..\..\Contracts\Identity\V1\identity.proto"
-      GrpcServices="Client"
-      Link="Protos\identity.proto" />
+    <Protobuf Include="..\..\Contracts\Identity\V1\identity.proto" GrpcServices="Client" Link="Protos\identity.proto" />
   </ItemGroup>
 
   <PropertyGroup>

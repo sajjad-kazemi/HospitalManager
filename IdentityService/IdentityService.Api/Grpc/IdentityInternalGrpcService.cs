@@ -29,7 +29,7 @@ namespace IdentityService.Api.Grpc
             {
                 throw new RpcException(
                     new Status(
-                        StatusCode.Unauthenticated,
+                        StatusCode.PermissionDenied,
                         "Service authentication failed."));
             }
 
