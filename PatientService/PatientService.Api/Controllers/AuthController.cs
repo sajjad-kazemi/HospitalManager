@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PatientService.Application.Authentication;
+using Microsoft.OpenApi;
+using System.Xml.Serialization;
 using System.IdentityModel.Tokens.Jwt;
+using PatientService.Api.Validation;
 
 namespace PatientService.Api.Controllers
 {
@@ -31,19 +34,11 @@ namespace PatientService.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
+        [ValidateRequest(typeof(LoginApiRequest))]
         public async Task<IActionResult> Login(
     LoginApiRequest request,
     CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.Email) ||
-                string.IsNullOrWhiteSpace(request.Password))
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Title = "Email and password are required."
-                });
-            }
-
             try
             {
                 var result = await _identityLoginClient.LoginAsync(

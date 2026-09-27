@@ -1,11 +1,17 @@
 using HospitalManager.Contracts.Identity.V1;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using PatientService.Application.Authentication;
+using PatientService.Application.Employees;
+using PatientService.Api.Swagger;
+using PatientService.Api.Validation;
+using PatientService.Api.Controllers;
 using PatientService.Infrastructure;
 using PatientService.Infrastructure.Authentication;
+using PatientService.Infrastructure.Employees;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 
@@ -14,9 +20,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.OperationFilter<LoginRequestExampleFilter>();
+
     options.AddSecurityDefinition("Bearer",
         new OpenApiSecurityScheme
         {
@@ -103,6 +112,8 @@ builder.Services
 builder.Services.AddScoped<
     IIdentityLoginClient,
     GrpcIdentityLoginClient>();
+
+builder.Services.AddScoped<IEmployeeDirectory, GrpcEmployeeDirectory>();
 
 var app = builder.Build();
 

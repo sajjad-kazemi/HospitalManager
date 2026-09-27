@@ -1,4 +1,7 @@
 using IdentityService.Api.Grpc;
+using IdentityService.Api.Validation;
+using FluentValidation;
+using HospitalManager.Contracts.Identity.V1;
 using IdentityService.Application.Authentication;
 using IdentityService.Infrastructure;
 using IdentityService.Infrastructure.Authentication;
@@ -28,6 +31,7 @@ builder.Services.AddSingleton<
     JwtAccessTokenGenerator>();
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IValidator<CreateEmployeeRequest>, CreateEmployeeRequestValidator>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

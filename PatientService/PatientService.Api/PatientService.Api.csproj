@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
     <ProjectReference Include="..\PatientService.Application\PatientService.Application.csproj" />
     <ProjectReference Include="..\PatientService.Infrastructure\PatientService.Infrastructure.csproj" />
   </ItemGroup>
