@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using PatientService.Application.Authentication;
+using PatientService.Application.Employees;
 using PatientService.Infrastructure;
 using PatientService.Infrastructure.Authentication;
+using PatientService.Infrastructure.Employees;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 
@@ -103,6 +105,8 @@ builder.Services
 builder.Services.AddScoped<
     IIdentityLoginClient,
     GrpcIdentityLoginClient>();
+
+builder.Services.AddScoped<IEmployeeDirectory, GrpcEmployeeDirectory>();
 
 var app = builder.Build();
 

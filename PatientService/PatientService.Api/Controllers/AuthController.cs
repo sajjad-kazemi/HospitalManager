@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PatientService.Application.Authentication;
+using Microsoft.OpenApi;
+using System.Xml.Serialization;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace PatientService.Api.Controllers
