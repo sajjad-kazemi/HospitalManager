@@ -28,6 +28,10 @@
     <Protobuf Include="..\..\Contracts\Identity\V1\identity.proto" GrpcServices="Client" Link="Protos\identity.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
