@@ -1,66 +1,35 @@
-﻿using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PatientService.Application.Authentication;
-using Microsoft.OpenApi;
-using System.Xml.Serialization;
 using System.IdentityModel.Tokens.Jwt;
 using PatientService.Api.Validation;
 
-namespace PatientService.Api.Controllers
+namespace PatientService.Api.Controllers;
+
+public sealed record LoginApiRequest(string Email, string Password);
+
+[Route("api/auth")]
+public sealed class AuthController(IIdentityLoginClient identityLoginClient) : ApiControllerBase
 {
-    public sealed record LoginApiRequest(
-       string Email,
-       string Password);
-
-    [Route("api/auth")]
-    public sealed class AuthController(
-        IIdentityLoginClient _identityLoginClient) : ApiControllerBase
+    [Authorize]
+    [HttpGet("me")]
+    public IActionResult GetCurrentUser() => Ok(new
     {
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult GetCurrentUser()
-        {
-            return Ok(new
-            {
-                UserId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value,
-                Email = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value,
-                FirstName = User.FindFirst(JwtRegisteredClaimNames.GivenName)?.Value,
-                LastName = User.FindFirst(JwtRegisteredClaimNames.FamilyName)?.Value,
-                Roles = User.FindAll("role").Select(claim => claim.Value)
-            });
-        }
+        UserId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value,
+        Email = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value,
+        FirstName = User.FindFirst(JwtRegisteredClaimNames.GivenName)?.Value,
+        LastName = User.FindFirst(JwtRegisteredClaimNames.FamilyName)?.Value,
+        Roles = User.FindAll("role").Select(claim => claim.Value)
+    });
 
-
-        [AllowAnonymous]
-        [HttpPost("login")]
-        [ValidateRequest(typeof(LoginApiRequest))]
-        public async Task<IActionResult> Login(
-    LoginApiRequest request,
-    CancellationToken cancellationToken)
-        {
-            try
-            {
-                var result = await _identityLoginClient.LoginAsync(
-                    request.Email,
-                    request.Password,
-                    cancellationToken);
-
-                return result is null
-                    ? Unauthorized(new ProblemDetails
-                    {
-                        Title = "Invalid credentials."
-                    })
-                    : Ok(result);
-            }
-            catch (RpcException)
-            {
-                return StatusCode(503, new ProblemDetails
-                {
-                    Title = "IdentityService is unavailable."
-                });
-            }
-        }
-
+    [AllowAnonymous]
+    [HttpPost("login")]
+    [ValidateRequest(typeof(LoginApiRequest))]
+    public async Task<IActionResult> Login(LoginApiRequest request, CancellationToken cancellationToken)
+    {
+        var result = await identityLoginClient.LoginAsync(request.Email, request.Password, cancellationToken);
+        return result is null
+            ? Unauthorized(new ProblemDetails { Title = "Invalid credentials." })
+            : Ok(result);
     }
 }

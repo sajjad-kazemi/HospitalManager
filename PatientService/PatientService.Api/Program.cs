@@ -9,6 +9,7 @@ using PatientService.Application.Employees;
 using PatientService.Api.Swagger;
 using PatientService.Api.Validation;
 using PatientService.Api.Controllers;
+using PatientService.Api.ErrorHandling;
 using PatientService.Infrastructure;
 using PatientService.Infrastructure.Authentication;
 using PatientService.Infrastructure.Employees;
@@ -20,7 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddScoped<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
+builder.Services.AddScoped<IValidator<PatientService.Application.Employees.CreateEmployeeRequest>, CreateEmployeeRequestValidator>();
+builder.Services.AddScoped<IValidator<AssignEmployeeRoleRequest>, AssignEmployeeRoleRequestValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -116,6 +121,7 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<IEmployeeDirectory, GrpcEmployeeDirectory>();
 
 var app = builder.Build();
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
