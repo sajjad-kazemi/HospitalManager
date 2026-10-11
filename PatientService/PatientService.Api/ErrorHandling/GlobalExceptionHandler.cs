@@ -1,3 +1,4 @@
+using PatientService.Application.Errors;
 using System.Diagnostics;
 using Grpc.Core;
 using Microsoft.AspNetCore.Diagnostics;
@@ -18,7 +19,7 @@ public sealed class GlobalExceptionHandler(
             return true;
         }
 
-        var (status, title) = exception is RpcException rpc
+        var (status, title) = exception is ConflictException ? (409, "The change conflicts with an existing record.") : exception is RpcException rpc
             ? rpc.StatusCode switch
             {
                 RpcStatus.InvalidArgument => (400, "The request is invalid."),
@@ -57,3 +58,4 @@ public sealed class GlobalExceptionHandler(
         return true;
     }
 }
+

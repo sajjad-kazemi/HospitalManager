@@ -1,0 +1,33 @@
+@baseUrl = https://localhost:7201
+@token = paste-access-token-here
+@patientId = 00000000-0000-0000-0000-000000000000
+
+### Register a patient (Admin or Receptionist). Repeat to verify 409.
+POST {{baseUrl}}/api/patients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstName": "Sara",
+  "lastName": "Ahmadi",
+  "nationalCode": "1234567890",
+  "birthDate": "1995-05-12",
+  "gender": 2
+}
+
+### Set patientId to the ID returned by registration.
+GET {{baseUrl}}/api/patients/{{patientId}}
+Authorization: Bearer {{token}}
+
+### Invalid registration: expect 400.
+POST {{baseUrl}}/api/patients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstName": "",
+  "lastName": "Ahmadi",
+  "nationalCode": "",
+  "birthDate": "2999-01-01",
+  "gender": 99
+}

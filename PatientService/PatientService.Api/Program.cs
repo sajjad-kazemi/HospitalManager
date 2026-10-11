@@ -6,6 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using PatientService.Application.Authentication;
 using PatientService.Application.Employees;
+using PatientService.Application.Patients;
+using PatientService.Application.Persistence;
+using PatientService.Infrastructure.Patients;
+using PatientService.Infrastructure.Persistence;
 using PatientService.Api.Swagger;
 using PatientService.Api.Validation;
 using PatientService.Api.Controllers;
@@ -100,6 +104,8 @@ builder.Services
 builder.Services.AddSingleton<RSA>(_ => rsa);
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("PatientRegistration", policy =>
+        policy.RequireAuthenticatedUser().RequireRole("Receptionist", "Admin"));
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireAuthenticatedUser()
               .RequireRole("Admin"));
@@ -119,6 +125,10 @@ builder.Services.AddScoped<
     GrpcIdentityLoginClient>();
 
 builder.Services.AddScoped<IEmployeeDirectory, GrpcEmployeeDirectory>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IPatientRegistrationService, PatientRegistrationService>();
+builder.Services.AddScoped<IValidator<RegisterPatientRequest>, RegisterPatientRequestValidator>();
 
 var app = builder.Build();
 app.UseExceptionHandler();
@@ -146,3 +156,5 @@ app.MapGet("/health/ready",
             : Results.StatusCode(503));
 
 app.Run();
+
+
